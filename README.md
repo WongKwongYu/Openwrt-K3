@@ -1,3 +1,12 @@
+斐讯Phicomm K3 纯净精简固件：
+
+源码来自于LEAN，移除了ipv6，Actions自动编译
+包含的插件：Passwall  Upnp  Wake-on-LAN  Kms  TurboAcc(Sfe)
+Release中的K3文件已测试无问题，其他型号固件不保证能用。
+
+----------------------------------------------------------------------------------
+
+
 # Actions-OpenWrt
 
 [![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square&label=LICENSE)](https://github.com/P3TERX/Actions-OpenWrt/blob/master/LICENSE)
