@@ -12,28 +12,56 @@
 
 name: Update Checker
 
-env:
-  REPO_URL: https://github.com/coolsnowwolf/lede
-  REPO_BRANCH: master
-
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 */8 * * *
+    - cron: 0/10 * * * *
 
 jobs:
   check:
     runs-on: ubuntu-latest
 
     steps:
-
+    
     - name: Get Commit Hash
       id: getHash
       run: |
-        git clone --depth 1 $REPO_URL -b $REPO_BRANCH .
-        echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+        git clone https://github.com/coolsnowwolf/lede --filter=blob:none
+        cd lede
+        echo "SHA_01=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        cd
 
-    - name: Compare Commit Hash
+        git clone https://github.com/coolsnowwolf/packages --filter=blob:none
+        cd packages
+        echo "SHA_02=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        cd
+
+        git clone https://github.com/coolsnowwolf/luci --filter=blob:none
+        cd luci
+        echo "SHA_03=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        cd
+        
+        git clone https://github.com/fw876/helloworld --filter=blob:none
+        cd helloworld
+        echo "SHA_04=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        cd
+
+        git clone https://github.com/xiaorouji/openwrt-passwall --filter=blob:none
+        cd openwrt-passwall
+        echo "SHA_05=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        cd
+
+    - name: Show Commit Head and Combination Heads
+      id: combHeader
+      run: |
+        echo "commitHash_All=\
+          ${{steps.getHash.outputs.SHA_01}}\
+          ${{steps.getHash.outputs.SHA_02}}\
+          ${{steps.getHash.outputs.SHA_03}}\
+          ${{steps.getHash.outputs.SHA_04}}\
+          ${{steps.getHash.outputs.SHA_05}}" >> $GITHUB_OUTPUT
+
+    - name: Get Commit Hash
       id: cacheHash
       uses: actions/cache@main
       with:
@@ -53,7 +81,7 @@ jobs:
         event-type: Source Code Update
 
     - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@main
+      uses: Mattraks/delete-workflow-runs@v2
       with:
         retain_days: 0
         keep_minimum_runs: 10
