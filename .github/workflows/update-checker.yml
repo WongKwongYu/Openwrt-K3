@@ -83,5 +83,5 @@ jobs:
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
       with:
-        retain_days: 10
+        retain_days: 0
         keep_minimum_runs: 10
