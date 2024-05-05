@@ -61,13 +61,13 @@ jobs:
           ${{steps.getHash.outputs.SHA_04}}\
           ${{steps.getHash.outputs.SHA_05}}" >> $GITHUB_OUTPUT
 
-    - name: Get Commit Hash
+    - name: Compare Commit Hash
       id: cacheHash
       uses: actions/cache@main
       with:
-        path: .commitHash
-        key: commitHash_${{ steps.getHash.outputs.commitHash }}
-
+        path: .commitHash_All
+        key: HEAD-${{ steps.combHeader.outputs.commitHash_All }}
+        
     - name: Save New Commit Hash
       if: steps.cacheHash.outputs.cache-hit != 'true'
       run: |
